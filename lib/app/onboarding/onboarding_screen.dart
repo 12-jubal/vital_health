@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:vital_health/app/journaling/journaling_screen.dart';
 import 'package:vital_health/app/onboarding/onboarding_cubit.dart';
 import 'package:vital_health/app/onboarding/onboarding_state.dart';
 import 'package:vital_health/core/repositories/motivational_message_repository.dart';
@@ -39,22 +40,21 @@ class OnboardingScreen extends StatelessWidget {
                   currentIndex: state.currentPage,
                   onBack:
                       state.currentPage > 0 ? () => cubit.previousPage() : null,
-                  onNext: () => cubit.nextPage(),
-                  // onNext: () {
-                  //   (state.currentPage < cubit.totalPages - 1)
-                  //       ? () => cubit.nextPage()
-                  //       : null;
-                  //   // : Navigator.of(context)
-                  //   //     .pushReplacement(MaterialPageRoute(builder: (_) {
-                  //   //     return const HomeScreen();
-                  //   //   }));
-                  // },
+                  // onNext: () => cubit.nextPage(),
+                  onNext: () {
+                    (state.currentPage < cubit.totalPages - 1)
+                        ? () => cubit.nextPage()
+                        : Navigator.of(context)
+                            .pushReplacement(MaterialPageRoute(builder: (_) {
+                            return const JournalingScreen();
+                          }));
+                  },
 
                   onSkip: () {
-                    // Navigator.of(context)
-                    //     .pushReplacement(MaterialPageRoute(builder: (_) {
-                    //   return const HomeScreen();
-                    // }));
+                    Navigator.of(context)
+                        .pushReplacement(MaterialPageRoute(builder: (_) {
+                      return const JournalingScreen();
+                    }));
                   },
                 ),
               ),
