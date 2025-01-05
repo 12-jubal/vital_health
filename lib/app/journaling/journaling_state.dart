@@ -6,8 +6,12 @@ class JournalingLoading extends JournalingState {}
 
 class JournalingLoaded extends JournalingState {
   final List<Map<String, dynamic>> journalEntries;
+  final String motivationalMessage;
 
-  JournalingLoaded({required this.journalEntries});
+  JournalingLoaded(
+      {required this.journalEntries, required String? motivationalMessage})
+      : motivationalMessage =
+            motivationalMessage ?? 'Stay positive and keep journaling!';
 }
 
 class JournalingError extends JournalingState {

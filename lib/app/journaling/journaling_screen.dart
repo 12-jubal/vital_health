@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:vital_health/app/journaling/journaling_cubit.dart';
 import 'package:vital_health/app/journaling/journaling_state.dart';
+import 'package:vital_health/core/repositories/motivational_message_repository.dart';
+import 'package:vital_health/utils/widgets/add_journal.dart';
 
 class JournalingScreen extends StatelessWidget {
   const JournalingScreen({super.key});
@@ -9,119 +11,102 @@ class JournalingScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-        create: (_) =>
-            JournalingCubit()..fetchJournalEntries(), // Fetch entries on load
-        child: BlocConsumer<JournalingCubit, JournalingState>(
-          listener: (context, state) {
-            if (state is JournalingError) {
-              ScaffoldMessenger.of(context)
-                  .showSnackBar(SnackBar(content: Text(state.message)));
-            }
-          },
-          builder: (context, state) {
-            // final cubit = context.read<JournalingCubit>();
+      create: (_) => JournalingCubit(MotivationalMessageRepository())
+        ..fetchJournalsAndMotivationalMessage(), // Fetch entries on load
+      child: BlocConsumer<JournalingCubit, JournalingState>(
+        listener: (context, state) {
+          if (state is JournalingError) {
+            ScaffoldMessenger.of(context)
+                .showSnackBar(SnackBar(content: Text(state.message)));
+          }
+        },
+        builder: (context, state) {
+          // final cubit = context.read<JournalingCubit>();
 
-            return Scaffold(
-              appBar: AppBar(title: Text('My Journal')),
-              body: Builder(
-                builder: (context) {
-                  if (state is JournalingLoading) {
-                    return Center(child: CircularProgressIndicator());
-                  } else if (state is JournalingError) {
-                    return Center(child: Text('Error: ${state.message}'));
-                  } else if (state is JournalingLoaded) {
-                    final entries = state.journalEntries;
+          return Scaffold(
+            appBar: AppBar(title: Text('My Journal')),
+            body: Builder(
+              builder: (context) {
+                if (state is JournalingLoading) {
+                  return Center(child: CircularProgressIndicator());
+                } else if (state is JournalingError) {
+                  return Center(child: Text('Error: ${state.message}'));
+                } else if (state is JournalingLoaded) {
+                  // final entries = state.journalEntries;
+                  final journals = state.journalEntries;
+                  final motivationalMessage = state.motivationalMessage;
 
-                    if (entries.isEmpty) {
-                      return Center(child: Text('No journal entries yet.'));
-                    }
-
-                    return ListView.builder(
-                      itemCount: entries.length,
-                      itemBuilder: (context, index) {
-                        final entry = entries[index];
-                        return ListTile(
-                          leading: Text(entry['mood'],
-                              style: TextStyle(fontSize: 24)),
-                          title: Text(entry['content']),
-                          subtitle: Text(entry['timestamp']),
-                        );
-                      },
+                  if (journals.isEmpty) {
+                    return Center(
+                      child: Text(
+                        'No journal entries yet. \n Please add a new entry.',
+                        textAlign: TextAlign.center,
+                      ),
                     );
-                  } else {
-                    return Center(child: Text('Welcome to Journaling!'));
                   }
-                },
-              ),
-              floatingActionButton: FloatingActionButton(
-                onPressed: () {
-                  _showAddJournalDialog(context);
-                },
-                child: Icon(Icons.add),
-              ),
-            );
-          },
-        ));
-  }
 
-  void _showAddJournalDialog(BuildContext context) {
-    final TextEditingController _controller = TextEditingController();
-    String selectedMood = "😃"; // Default mood
-
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: Text('Add Journal Entry'),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              // Emoji Selector
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: ["😃", "😐", "😔"].map((emoji) {
-                  return GestureDetector(
-                    onTap: () {
-                      selectedMood = emoji;
-                    },
-                    child: Text(
-                      emoji,
-                      style: TextStyle(fontSize: 32),
-                    ),
+                  return Column(
+                    children: [
+                      // Display motivational message
+                      Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Text(
+                          motivationalMessage,
+                          style: TextStyle(
+                              fontSize: 16, fontStyle: FontStyle.italic),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                      Expanded(
+                        child: ListView.builder(
+                          itemCount: journals.length,
+                          itemBuilder: (context, index) {
+                            final entry = journals[index];
+                            return ListTile(
+                              leading: Text(entry['mood'],
+                                  style: TextStyle(fontSize: 24)),
+                              title: Text(entry['content']),
+                              subtitle: Text(entry['date']),
+                            );
+                          },
+                        ),
+                      ),
+                    ],
                   );
-                }).toList(),
-              ),
-              SizedBox(height: 10),
-              // Text Input for Journal
-              TextField(
-                controller: _controller,
-                maxLines: 3,
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(),
-                  hintText: "Write about your day...",
-                ),
-              ),
-            ],
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: Text('Cancel'),
-            ),
-            ElevatedButton(
-              onPressed: () {
-                final content = _controller.text;
-                if (content.isNotEmpty) {
-                  context
-                      .read<JournalingCubit>()
-                      .addJournalEntry(selectedMood, content);
-                  Navigator.pop(context);
+                } else {
+                  return Center(child: Text('Welcome to Journaling!'));
                 }
               },
-              child: Text('Save'),
             ),
-          ],
-        );
+            floatingActionButton: FloatingActionButton(
+              onPressed: () {
+                _showAddJournalBottomSheet(
+                  context,
+                  (mood, content) {
+                    context
+                        .read<JournalingCubit>()
+                        .addJournalEntry(mood, content);
+                  },
+                );
+              },
+              child: Icon(Icons.add),
+            ),
+          );
+        },
+      ),
+    );
+  }
+
+  void _showAddJournalBottomSheet(
+      BuildContext context, Function(String mood, String content) saveEntry) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (context) {
+        return AddJournalBottomSheet(onSave: saveEntry);
       },
     );
   }

@@ -4,7 +4,7 @@ import 'package:vital_health/app/journaling/journaling_screen.dart';
 import 'package:vital_health/app/onboarding/onboarding_cubit.dart';
 import 'package:vital_health/app/onboarding/onboarding_state.dart';
 import 'package:vital_health/core/repositories/motivational_message_repository.dart';
-import 'package:vital_health/widgets/onboarding_page.dart';
+import 'package:vital_health/utils/widgets/onboarding_page.dart';
 
 class OnboardingScreen extends StatelessWidget {
   const OnboardingScreen({super.key});
@@ -42,12 +42,14 @@ class OnboardingScreen extends StatelessWidget {
                       state.currentPage > 0 ? () => cubit.previousPage() : null,
                   // onNext: () => cubit.nextPage(),
                   onNext: () {
-                    (state.currentPage < cubit.totalPages - 1)
-                        ? () => cubit.nextPage()
-                        : Navigator.of(context)
-                            .pushReplacement(MaterialPageRoute(builder: (_) {
-                            return const JournalingScreen();
-                          }));
+                    if (state.currentPage < cubit.totalPages - 1) {
+                      cubit.nextPage();
+                    } else {
+                      Navigator.of(context)
+                          .pushReplacement(MaterialPageRoute(builder: (_) {
+                        return const JournalingScreen();
+                      }));
+                    }
                   },
 
                   onSkip: () {
