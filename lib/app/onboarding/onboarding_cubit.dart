@@ -34,7 +34,6 @@ class OnboardingCubit extends Cubit<OnboardingState> {
 
   // Move to the next page
   void nextPage() {
-    print(state.currentPage);
     if (state.currentPage < totalPages - 1) {
       emit(state.copyWith(currentPage: state.currentPage + 1));
     }
