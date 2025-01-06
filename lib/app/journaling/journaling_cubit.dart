@@ -24,6 +24,7 @@ class JournalingCubit extends Cubit<JournalingState> {
           await motivationalMessageRepository.fetchRandomMessage();
 
       // await Future.delayed(Duration(seconds: 3));
+      // print('loaded');
       emit(
         JournalingLoaded(
           journalEntries: journals,
@@ -47,20 +48,4 @@ class JournalingCubit extends Cubit<JournalingState> {
       emit(JournalingError(message: e.toString()));
     }
   }
-
-  // Future<void> addJournalEntry(String mood, String content) async {
-  //   try {
-  //     emit(JournalingLoading());
-  //     await Future.delayed(Duration(seconds: 3));
-  //     final entry = {
-  //       'mood': mood,
-  //       'content': content,
-  //       'timestamp': DateTime.now().toIso8601String(),
-  //     };
-  //     _journalEntries.add(entry);
-  //     emit(JournalingLoaded(journalEntries: _journalEntries));
-  //   } catch (e) {
-  //     emit(JournalingError(message: 'Failed to save the journal entry.'));
-  //   }
-  // }
 }

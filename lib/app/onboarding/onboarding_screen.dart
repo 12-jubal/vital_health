@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:vital_health/app/journaling/journaling_screen.dart';
+import 'package:vital_health/app/bottom_nav/bottom_screen.dart';
 import 'package:vital_health/app/onboarding/onboarding_cubit.dart';
 import 'package:vital_health/app/onboarding/onboarding_state.dart';
 import 'package:vital_health/core/repositories/motivational_message_repository.dart';
@@ -47,7 +47,7 @@ class OnboardingScreen extends StatelessWidget {
                     } else {
                       Navigator.of(context)
                           .pushReplacement(MaterialPageRoute(builder: (_) {
-                        return const JournalingScreen();
+                        return const BottomNavBar();
                       }));
                     }
                   },
@@ -55,7 +55,7 @@ class OnboardingScreen extends StatelessWidget {
                   onSkip: () {
                     Navigator.of(context)
                         .pushReplacement(MaterialPageRoute(builder: (_) {
-                      return const JournalingScreen();
+                      return const BottomNavBar();
                     }));
                   },
                 ),
