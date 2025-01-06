@@ -1,3 +1,11 @@
+/// The [HealthCard] widget is used to display health-related information in a card format.
+/// It takes an [icon], [label], and [value] as required parameters.
+///
+///
+/// The card has a fixed width, rounded corners, and a border. The icon is displayed
+/// at the top, followed by the label and value.
+library;
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 

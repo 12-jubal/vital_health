@@ -1,3 +1,21 @@
+/// A stateless widget that represents an onboarding page.
+///
+/// The [OnboardingPage] widget displays an image, a description, and navigation controls
+/// for an onboarding flow. It includes a "Skip" button, a back button, a next button,
+/// and indicators to show the current page index.
+///
+/// The widget requires the following parameters:
+/// - [description]: A string that describes the content of the onboarding page.
+/// - [imagePath]: The path to the image asset to be displayed on the onboarding page.
+/// - [currentIndex]: The current index of the onboarding page.
+/// - [onSkip]: A callback function to be executed when the "Skip" button is pressed.
+/// - [onNext]: A callback function to be executed when the "Next" button is pressed.
+/// - [onBack]: A callback function to be executed when the "Back" button is pressed.
+///
+/// The [OnboardingPage] widget uses the `flutter_screenutil` package for responsive
+/// design, ensuring that the UI elements scale appropriately on different screen sizes.
+library;
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
