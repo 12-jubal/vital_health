@@ -1,3 +1,14 @@
+/// A stateless widget that represents a health card with an icon, label, and value.
+///
+/// The [HealthCard] widget displays an icon, a label, and a value inside a styled container.
+/// It is typically used to represent health-related information in a card format.
+///
+/// The [icon] parameter is required and specifies the icon to be displayed.
+/// The [label] parameter is required and specifies the label text to be displayed.
+/// The [value] parameter is required and specifies the value text to be displayed.
+///
+library;
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 

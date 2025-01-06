@@ -1,3 +1,16 @@
+/// A bottom sheet widget that allows users to add a journal entry with a mood and content.
+///
+/// The [AddJournalBottomSheet] widget provides a UI for selecting a mood (emoji) and
+/// writing a journal entry. It includes a title, emoji selector, text input field, and
+/// a save button. When the save button is pressed, the selected mood and content are
+/// passed to the [onSave] callback function.
+///
+/// The [onSave] parameter is a required callback function that takes two arguments:
+/// - [mood]: A string representing the selected mood (emoji).
+/// - [content]: A string representing the journal entry content.
+/// ```
+library;
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
